@@ -62,3 +62,35 @@ Deno.test(
     assert(n == null);
   },
 );
+
+Deno.test(
+  "WorkerReader works properly with small buffer size",
+  async () => {
+    const worker = {
+      onmessage(_event: MessageEvent<number[]>): void {},
+      terminate(): void {},
+    };
+    const reader = new WorkerReader(worker);
+    worker.onmessage(
+      new MessageEvent("worker", {
+        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      }),
+    );
+    reader.close();
+    worker.onmessage(
+      new MessageEvent("worker", {
+        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      }),
+    );
+    let n: number | null;
+    const p = new Uint8Array(8);
+    n = await reader.read(p);
+    assert(typeof n === "number");
+    assertEquals(p.slice(0, n), new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7]));
+    n = await reader.read(p);
+    assert(typeof n === "number");
+    assertEquals(p.slice(0, n), new Uint8Array([8, 9]));
+    n = await reader.read(p);
+    assert(n == null);
+  },
+);

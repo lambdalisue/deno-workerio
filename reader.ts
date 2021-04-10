@@ -1,4 +1,4 @@
-import { copyBytes, Queue } from "./deps.ts";
+import { Queue } from "./deps.ts";
 
 type WorkerForWorkerReader = {
   // deno-lint-ignore no-explicit-any
@@ -8,11 +8,13 @@ type WorkerForWorkerReader = {
 
 export class WorkerReader implements Deno.Reader, Deno.Closer {
   #queue?: Queue<Uint8Array>;
+  #remain: Uint8Array;
   #closed: boolean;
   #worker: WorkerForWorkerReader;
 
   constructor(worker: WorkerForWorkerReader) {
     this.#queue = new Queue();
+    this.#remain = new Uint8Array();
     this.#closed = false;
     this.#worker = worker;
     this.#worker.onmessage = (e: MessageEvent<number[]>) => {
@@ -23,13 +25,23 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
   }
 
   async read(p: Uint8Array): Promise<number | null> {
+    if (this.#remain.length) {
+      return await Promise.resolve(this.readFromRemain(p));
+    }
     if (!this.#queue || (this.#closed && this.#queue.empty())) {
       this.#queue = undefined;
       return await Promise.resolve(null);
     }
-    const r = await this.#queue.get();
-    const n = copyBytes(r, p);
-    return n;
+    this.#remain = await this.#queue.get();
+    return this.readFromRemain(p);
+  }
+
+  private readFromRemain(p: Uint8Array): number {
+    const n = p.byteLength;
+    const d = this.#remain.slice(0, n);
+    this.#remain = this.#remain.slice(n);
+    p.set(d);
+    return d.byteLength;
   }
 
   close(): void {
