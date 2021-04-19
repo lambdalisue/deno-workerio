@@ -1,3 +1,4 @@
+import * as io from "https://deno.land/std@0.93.0/io/mod.ts";
 import { WorkerReader, WorkerWriter } from "../mod.ts";
 
 const decoder = new TextDecoder();
@@ -21,7 +22,7 @@ const writer = new WorkerWriter(worker);
 await writer.write(encoder.encode("Hello"));
 await writer.write(encoder.encode("World"));
 
-for await (const data of Deno.iter(reader)) {
+for await (const data of io.iter(reader)) {
   const text = decoder.decode(data);
   console.log(text);
 }
