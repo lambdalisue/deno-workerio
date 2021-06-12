@@ -1,8 +1,8 @@
-# workerio-deno
+# workerio
 
 [![deno land](http://img.shields.io/badge/available%20on-deno.land/x-lightgrey.svg?logo=deno)](https://deno.land/x/workerio)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/workerio/mod.ts)
-[![Test](https://github.com/lambdalisue/workerio-deno/actions/workflows/test.yml/badge.svg)](https://github.com/lambdalisue/workerio-deno/actions/workflows/test.yml)
+[![Test](https://github.com/lambdalisue/deno-workerio/actions/workflows/test.yml/badge.svg)](https://github.com/lambdalisue/deno-workerio/actions/workflows/test.yml)
 
 [Deno][deno] module to translate Worker's system of messages into
 [Reader][reader] and [Writer][writer].
