@@ -1,5 +1,6 @@
 # workerio-deno
 
+[![deno land](http://img.shields.io/badge/available%20on-deno.land/x-lightgrey.svg?logo=deno)](https://deno.land/x/workerio)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/workerio/mod.ts)
 [![Test](https://github.com/lambdalisue/workerio-deno/actions/workflows/test.yml/badge.svg)](https://github.com/lambdalisue/workerio-deno/actions/workflows/test.yml)
 
@@ -27,17 +28,14 @@ import {
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
 
-const worker = new Worker(
-  new URL("./worker.ts", import.meta.url).href,
-  {
-    type: "module",
-    // NOTE:
-    // WorkerReader/WorkerWriter need to access 'Deno' namespace.
-    deno: {
-      namespace: true,
-    },
+const worker = new Worker(new URL("./worker.ts", import.meta.url).href, {
+  type: "module",
+  // NOTE:
+  // WorkerReader/WorkerWriter need to access 'Deno' namespace.
+  deno: {
+    namespace: true,
   },
-);
+});
 
 const reader = new WorkerReader(worker);
 const writer = new WorkerWriter(worker);
