@@ -26,11 +26,11 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
 
   async read(p: Uint8Array): Promise<number | null> {
     if (this.#remain.length) {
-      return await Promise.resolve(this.readFromRemain(p));
+      return this.readFromRemain(p);
     }
     if (!this.#queue || (this.#closed && this.#queue.empty())) {
       this.#queue = undefined;
-      return await Promise.resolve(null);
+      return null;
     }
     this.#remain = await this.#queue.get();
     return this.readFromRemain(p);
