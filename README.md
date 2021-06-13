@@ -93,14 +93,14 @@ N:        5 times
 ===========================================================
 Relaxing 1 sec ...
 Start benchmark
-1 Reader: 136 [ms] Writer: 44 [ms]
-2 Reader: 134 [ms] Writer: 42 [ms]
-3 Reader: 131 [ms] Writer: 44 [ms]
-4 Reader: 136 [ms] Writer: 45 [ms]
-5 Reader: 125 [ms] Writer: 40 [ms]
+1 Reader: 9 [ms] Writer: 0 [ms]
+2 Reader: 7 [ms] Writer: 0 [ms]
+3 Reader: 6 [ms] Writer: 1 [ms]
+4 Reader: 5 [ms] Writer: 1 [ms]
+5 Reader: 6 [ms] Writer: 0 [ms]
 ===========================================================
-Reader: Avg. 132.40 msec (63.358 Mbps)
-Writer: Avg. 43.000 msec (195.08 Mbps)
+Reader: Avg. 6.6000 msec (1271.0 Mbps)
+Writer: Avg. 0.40000 msec (20972 Mbps)
 ===========================================================
 ```
 
@@ -115,12 +115,12 @@ N:        3 times
 ===========================================================
 Relaxing 1 sec ...
 Start benchmark
-1 Reader: 1404 [ms] Writer: 393 [ms]
-2 Reader: 1326 [ms] Writer: 351 [ms]
-3 Reader: 1310 [ms] Writer: 366 [ms]
+1 Reader: 53 [ms] Writer: 7 [ms]
+2 Reader: 43 [ms] Writer: 1 [ms]
+3 Reader: 40 [ms] Writer: 1 [ms]
 ===========================================================
-Reader: Avg. 1346.7 msec (49.833 Mbps)
-Writer: Avg. 370.00 msec (181.38 Mbps)
+Reader: Avg. 45.333 msec (1480.3 Mbps)
+Writer: Avg. 3.0000 msec (22370 Mbps)
 ===========================================================
 ```
 
