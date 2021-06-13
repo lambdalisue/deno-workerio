@@ -44,7 +44,7 @@ jobs:
           deno-version: ${{ env.DENO_VERSION }}
       - name: Test
         run: |
-          deno test --unstable --allow-read --allow-net
+          deno test --no-check --unstable --allow-read --allow-net
         timeout-minutes: 5
 
   typecheck:

@@ -16,10 +16,7 @@ export class WorkerWriter implements Deno.Writer {
    * https://github.com/lambdalisue/deno-workerio/issues/5
    */
   write(p: Uint8Array): Promise<number> {
-    // XXX
-    // Send 'p' as-is once the issue below has resolved.
-    // https://github.com/denoland/deno/issues/3557
-    this.#worker.postMessage(Array.from(p));
+    this.#worker.postMessage(p);
     return Promise.resolve(p.length);
   }
 }

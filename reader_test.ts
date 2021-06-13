@@ -12,13 +12,13 @@ Deno.test(
     worker.onmessage?.call(
       worker,
       new MessageEvent("worker", {
-        data: [0, 1, 2, 3, 4],
+        data: new Uint8Array([0, 1, 2, 3, 4]),
       }),
     );
     worker.onmessage?.call(
       worker,
       new MessageEvent("worker", {
-        data: [5, 6, 7, 8, 9],
+        data: new Uint8Array([5, 6, 7, 8, 9]),
       }),
     );
     let p: Uint8Array;
@@ -45,14 +45,14 @@ Deno.test(
     worker.onmessage?.call(
       worker,
       new MessageEvent("worker", {
-        data: [0, 1, 2, 3, 4],
+        data: new Uint8Array([0, 1, 2, 3, 4]),
       }),
     );
     reader.close();
     worker.onmessage?.call(
       worker,
       new MessageEvent("worker", {
-        data: [5, 6, 7, 8, 9],
+        data: new Uint8Array([5, 6, 7, 8, 9]),
       }),
     );
     let p: Uint8Array;
@@ -78,14 +78,14 @@ Deno.test(
     worker.onmessage?.call(
       worker,
       new MessageEvent("worker", {
-        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        data: new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
       }),
     );
     reader.close();
     worker.onmessage?.call(
       worker,
       new MessageEvent("worker", {
-        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        data: new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
       }),
     );
     let n: number | null;

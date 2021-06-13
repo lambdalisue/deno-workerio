@@ -1,4 +1,4 @@
-type Payload = number[];
+type Payload = Uint8Array;
 
 export type WorkerForWorkerReader = {
   onmessage?: (message: MessageEvent<Payload>) => void;
