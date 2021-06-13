@@ -1,12 +1,12 @@
 import { assertEquals } from "./deps_test.ts";
-import { WorkerWriter } from "./mod.ts";
+import { WorkerForWorkerWriter, WorkerWriter } from "./mod.ts";
 
 Deno.test(
   "WorkerWriter invokes internal worker.postMessage when data is written by 'write' method",
   async () => {
     const posted: number[][] = [];
-    const worker = {
-      postMessage(message: number[]): void {
+    const worker: WorkerForWorkerWriter = {
+      postMessage(message) {
         posted.push(message);
       },
     };

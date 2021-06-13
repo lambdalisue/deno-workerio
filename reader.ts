@@ -1,23 +1,20 @@
-import { Queue } from "./deps.ts";
-
-type WorkerForWorkerReader = {
-  // deno-lint-ignore no-explicit-any
-  onmessage?: (message: MessageEvent<any>) => void;
-  terminate(): void;
-};
+import { Deferred, deferred, Queue } from "./deps.ts";
+import { WorkerForWorkerReader } from "./types.ts";
 
 export class WorkerReader implements Deno.Reader, Deno.Closer {
   #queue?: Queue<Uint8Array>;
   #remain: Uint8Array;
   #closed: boolean;
+  #waiter: Deferred<void>;
   #worker: WorkerForWorkerReader;
 
   constructor(worker: WorkerForWorkerReader) {
     this.#queue = new Queue();
     this.#remain = new Uint8Array();
     this.#closed = false;
+    this.#waiter = deferred();
     this.#worker = worker;
-    this.#worker.onmessage = (e: MessageEvent<number[]>) => {
+    this.#worker.onmessage = (e) => {
       if (this.#queue && !this.#closed) {
         this.#queue.put_nowait(new Uint8Array(e.data));
       }
@@ -26,13 +23,23 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
 
   async read(p: Uint8Array): Promise<number | null> {
     if (this.#remain.length) {
-      return await Promise.resolve(this.readFromRemain(p));
+      return this.readFromRemain(p);
     }
     if (!this.#queue || (this.#closed && this.#queue.empty())) {
       this.#queue = undefined;
-      return await Promise.resolve(null);
+      return null;
     }
-    this.#remain = await this.#queue.get();
+    if (!this.#queue?.empty()) {
+      this.#remain = this.#queue.get_nowait();
+      return this.readFromRemain(p);
+    }
+    // Wait queue or close
+    const r = await Promise.race([this.#queue.get(), this.#waiter]);
+    if (r == undefined) {
+      // Closed, so retry from the beginning
+      return await this.read(p);
+    }
+    this.#remain = r;
     return this.readFromRemain(p);
   }
 
@@ -46,6 +53,6 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
 
   close(): void {
     this.#closed = true;
-    this.#worker.terminate();
+    this.#waiter.resolve();
   }
 }
