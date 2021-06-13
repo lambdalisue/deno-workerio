@@ -43,8 +43,8 @@ Deno.test({
       ]);
 
       // Peformance check
-      const rtThreshold = 3000;
-      const wtThreshold = 3000;
+      const rtThreshold = 500;
+      const wtThreshold = 500;
       assert(rt < rtThreshold, "Reader is too slow");
       assert(wt < wtThreshold, "Writer is too slow");
     } finally {
@@ -88,8 +88,8 @@ Deno.test({
       ]);
 
       // Peformance check
-      const rtThreshold = 5000;
-      const wtThreshold = 5000;
+      const rtThreshold = 500;
+      const wtThreshold = 500;
       assert(rt < rtThreshold, "Reader is too slow");
       assert(wt < wtThreshold, "Writer is too slow");
     } finally {
@@ -133,8 +133,8 @@ Deno.test({
       ]);
 
       // Peformance check
-      const rtThreshold = 30000;
-      const wtThreshold = 30000;
+      const rtThreshold = 500;
+      const wtThreshold = 500;
       assert(rt < rtThreshold, "Reader is too slow");
       assert(wt < wtThreshold, "Writer is too slow");
     } finally {
