@@ -41,6 +41,5 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
 
   close(): void {
     this.#closed = true;
-    this.#worker.terminate();
   }
 }
