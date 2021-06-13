@@ -45,8 +45,8 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
 
   private readFromRemain(p: Uint8Array): number {
     const n = p.byteLength;
-    const d = this.#remain.slice(0, n);
-    this.#remain = this.#remain.slice(n);
+    const d = this.#remain.subarray(0, n);
+    this.#remain = this.#remain.subarray(n);
     p.set(d);
     return d.byteLength;
   }
