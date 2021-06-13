@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "./deps_test.ts";
+import { assert, assertEquals, delay, io } from "./deps_test.ts";
 import { WorkerForWorkerReader, WorkerReader } from "./mod.ts";
 
 Deno.test(
@@ -100,3 +100,24 @@ Deno.test(
     assertEquals(n, null);
   },
 );
+
+Deno.test({
+  name: "WorkerReader properly stop reading when it' closed",
+  fn: async () => {
+    const worker: WorkerForWorkerReader = {
+      onmessage() {},
+      terminate() {},
+    };
+    const reader = new WorkerReader(worker);
+    const consumer = async () => {
+      for await (const _ of io.iter(reader)) {
+        // Do NOTHING
+      }
+    };
+    await Promise.race([
+      Promise.all([consumer(), delay(10).then(() => reader.close())]),
+      delay(100).then(() => Promise.reject("Timeout")),
+    ]);
+  },
+  sanitizeOps: false,
+});
