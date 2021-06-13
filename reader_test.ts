@@ -59,7 +59,7 @@ Deno.test(
     assertEquals(p.slice(0, n), new Uint8Array([0, 1, 2, 3, 4]));
     p = new Uint8Array(10);
     n = await reader.read(p);
-    assert(n == null);
+    assertEquals(n, null);
   },
 );
 
@@ -91,6 +91,6 @@ Deno.test(
     assert(typeof n === "number");
     assertEquals(p.slice(0, n), new Uint8Array([8, 9]));
     n = await reader.read(p);
-    assert(n == null);
+    assertEquals(n, null);
   },
 );
