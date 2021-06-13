@@ -16,7 +16,7 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
     this.#worker = worker;
     this.#worker.onmessage = (e) => {
       if (this.#queue && !this.#closed) {
-        this.#queue.put_nowait(new Uint8Array(e.data));
+        this.#queue.put_nowait(e.data);
       }
     };
   }
