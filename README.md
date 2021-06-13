@@ -75,6 +75,52 @@ async function main(): Promise<void> {
 main().catch((e) => console.error(e));
 ```
 
+## Benchmark
+
+You can run benchmark of `WorkerReader` and `WorkerWriter` with the following
+command:
+
+```
+$ deno run --no-check --unstable --allow-read --allow-net ./benchmark/benchmark.ts
+===========================================================
+Transfer: 1 MiB
+N:        5 times
+===========================================================
+Relaxing 1 sec ...
+Start benchmark
+1 Reader: 136 [ms] Writer: 44 [ms]
+2 Reader: 134 [ms] Writer: 42 [ms]
+3 Reader: 131 [ms] Writer: 44 [ms]
+4 Reader: 136 [ms] Writer: 45 [ms]
+5 Reader: 125 [ms] Writer: 40 [ms]
+===========================================================
+Reader: Avg. 132.40 msec (63.358 Mbps)
+Writer: Avg. 43.000 msec (195.08 Mbps)
+===========================================================
+```
+
+Use `-n` to change the number of tries and `-size` to the size of the buffer (in
+MB) like:
+
+```
+$ deno run --no-check --unstable --allow-read --allow-net ./benchmark/benchmark.ts -n 3 --size 8
+===========================================================
+Transfer: 8 MiB
+N:        3 times
+===========================================================
+Relaxing 1 sec ...
+Start benchmark
+1 Reader: 1404 [ms] Writer: 393 [ms]
+2 Reader: 1326 [ms] Writer: 351 [ms]
+3 Reader: 1310 [ms] Writer: 366 [ms]
+===========================================================
+Reader: Avg. 1346.7 msec (49.833 Mbps)
+Writer: Avg. 370.00 msec (181.38 Mbps)
+===========================================================
+```
+
+See [Benchmark](./wiki/Benchmark) for various benchmarks.
+
 ## License
 
 The code follows MIT license written in [LICENSE](./LICENSE). Contributors need
