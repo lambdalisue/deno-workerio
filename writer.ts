@@ -1,7 +1,4 @@
-type WorkerForWorkerWriter = {
-  // deno-lint-ignore no-explicit-any
-  postMessage(message: any): void;
-};
+import { WorkerForWorkerWriter } from "./types.ts";
 
 export class WorkerWriter implements Deno.Writer {
   #worker: WorkerForWorkerWriter;

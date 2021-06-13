@@ -1,10 +1,5 @@
 import { Queue } from "./deps.ts";
-
-type WorkerForWorkerReader = {
-  // deno-lint-ignore no-explicit-any
-  onmessage?: (message: MessageEvent<any>) => void;
-  terminate(): void;
-};
+import { WorkerForWorkerReader } from "./types.ts";
 
 export class WorkerReader implements Deno.Reader, Deno.Closer {
   #queue?: Queue<Uint8Array>;
@@ -17,7 +12,7 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
     this.#remain = new Uint8Array();
     this.#closed = false;
     this.#worker = worker;
-    this.#worker.onmessage = (e: MessageEvent<number[]>) => {
+    this.#worker.onmessage = (e) => {
       if (this.#queue && !this.#closed) {
         this.#queue.put_nowait(new Uint8Array(e.data));
       }

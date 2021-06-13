@@ -1,20 +1,22 @@
 import { assert, assertEquals } from "./deps_test.ts";
-import { WorkerReader } from "./mod.ts";
+import { WorkerForWorkerReader, WorkerReader } from "./mod.ts";
 
 Deno.test(
   "WorkerReader stores received data and return on 'read' method",
   async () => {
-    const worker = {
-      onmessage(_event: MessageEvent<number[]>): void {},
-      terminate(): void {},
+    const worker: WorkerForWorkerReader = {
+      onmessage() {},
+      terminate() {},
     };
     const reader = new WorkerReader(worker);
-    worker.onmessage(
+    worker.onmessage?.call(
+      worker,
       new MessageEvent("worker", {
         data: [0, 1, 2, 3, 4],
       }),
     );
-    worker.onmessage(
+    worker.onmessage?.call(
+      worker,
       new MessageEvent("worker", {
         data: [5, 6, 7, 8, 9],
       }),
@@ -35,18 +37,20 @@ Deno.test(
 Deno.test(
   "WorkerReader return 'null' when the reader had closed by 'close' method",
   async () => {
-    const worker = {
-      onmessage(_event: MessageEvent<number[]>): void {},
-      terminate(): void {},
+    const worker: WorkerForWorkerReader = {
+      onmessage() {},
+      terminate() {},
     };
     const reader = new WorkerReader(worker);
-    worker.onmessage(
+    worker.onmessage?.call(
+      worker,
       new MessageEvent("worker", {
         data: [0, 1, 2, 3, 4],
       }),
     );
     reader.close();
-    worker.onmessage(
+    worker.onmessage?.call(
+      worker,
       new MessageEvent("worker", {
         data: [5, 6, 7, 8, 9],
       }),
@@ -66,18 +70,20 @@ Deno.test(
 Deno.test(
   "WorkerReader works properly with small buffer size",
   async () => {
-    const worker = {
-      onmessage(_event: MessageEvent<number[]>): void {},
-      terminate(): void {},
+    const worker: WorkerForWorkerReader = {
+      onmessage() {},
+      terminate() {},
     };
     const reader = new WorkerReader(worker);
-    worker.onmessage(
+    worker.onmessage?.call(
+      worker,
       new MessageEvent("worker", {
         data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       }),
     );
     reader.close();
-    worker.onmessage(
+    worker.onmessage?.call(
+      worker,
       new MessageEvent("worker", {
         data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       }),
