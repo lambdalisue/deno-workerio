@@ -7,10 +7,11 @@
 [Deno][deno] module to translate Worker's system of messages into
 [Reader][reader] and [Writer][writer].
 
+This module supports Deno v1.13.0 or later.
+
 Note that this package requires
 [`Worker.postMessage` supports structured clone
-algorithm](https://deno.com/blog/v1.10#worker.postmessage-supports-structured-clone-algorithm)
-introduced in Deno v1.10.
+algorithm](https://deno.com/blog/v1.10#worker.postmessage-supports-structured-clone-algorithm).
 
 Note that this package accesses `Deno` namespace thus
 [Using Deno in worker](https://deno.land/manual@v1.11.0/runtime/workers#using-deno-in-worker)

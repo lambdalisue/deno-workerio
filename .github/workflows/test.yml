@@ -21,6 +21,7 @@ jobs:
           - ubuntu-latest
         version:
           - "1.x"
+          - "1.13.x"
     runs-on: ${{ matrix.runner }}
     steps:
       - run: git config --global core.autocrlf false
@@ -55,6 +56,7 @@ jobs:
           - ubuntu-latest
         version:
           - "1.x"
+          - "1.13.x"
     runs-on: ${{ matrix.runner }}
     steps:
       - run: git config --global core.autocrlf false
