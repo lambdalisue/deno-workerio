@@ -1,7 +1,7 @@
 name: Test
 
 env:
-  DENO_VERSION: 1.x
+  DENO_DIR: ".deno"
 
 on:
   schedule:
@@ -14,46 +14,64 @@ on:
       - main
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
+  check:
+    strategy:
+      matrix:
+        runner:
+          - ubuntu-latest
+        version:
+          - "1.x"
+    runs-on: ${{ matrix.runner }}
     steps:
+      - run: git config --global core.autocrlf false
+        if: runner.os == 'Windows'
       - uses: actions/checkout@v2
-      - uses: denoland/setup-deno@main
+      - uses: denoland/setup-deno@v1
         with:
-          deno-version: ${{ env.DENO_VERSION }}
-      - name: Lint
-        run: deno lint
-
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: denoland/setup-deno@main
+          deno-version: "${{ matrix.version }}"
+      - uses: actions/cache@v2
         with:
-          deno-version: ${{ env.DENO_VERSION }}
-      - name: Format
+          path: ${{ env.DENO_DIR }}
+          key: ${{ runner.os }}-deno-${{ matrix.version }}-${{ hashFiles('**/*.ts') }}
+          restore-keys: |
+            ${{ runner.os }}-deno-${{ matrix.version }}-
+            ${{ runner.os }}-deno-
+      - name: Lint check
         run: |
-          deno fmt --check
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: denoland/setup-deno@main
-        with:
-          deno-version: ${{ env.DENO_VERSION }}
-      - name: Test
+          make lint
+      - name: Format check
         run: |
-          deno test --no-check --unstable --allow-read --allow-net
-        timeout-minutes: 5
-
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: denoland/setup-deno@main
-        with:
-          deno-version: ${{ env.DENO_VERSION }}
+          make fmt-check
       - name: Type check
         run: |
-          deno test --unstable --no-run ./*.ts
+          make type-check
+
+  test:
+    strategy:
+      matrix:
+        runner:
+          - windows-latest
+          - macos-latest
+          - ubuntu-latest
+        version:
+          - "1.x"
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - run: git config --global core.autocrlf false
+        if: runner.os == 'Windows'
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: "${{ matrix.version }}"
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: ${{ env.DENO_DIR }}
+          key: ${{ runner.os }}-deno-${{ matrix.version }}-${{ hashFiles('**/*.ts') }}
+          restore-keys: |
+            ${{ runner.os }}-deno-${{ matrix.version }}-
+            ${{ runner.os }}-deno-
+      - name: Test
+        run: |
+          make test
+        timeout-minutes: 5
