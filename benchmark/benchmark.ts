@@ -46,7 +46,7 @@ async function main(): Promise<void> {
     string: ["n", "size"],
     default: {
       n: 5,
-      size: 1,
+      size: 10,
     },
   });
   const worker = new Worker(
