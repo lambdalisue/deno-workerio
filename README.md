@@ -7,7 +7,10 @@
 [Deno][deno] module to translate Worker's system of messages into
 [Reader][reader] and [Writer][writer].
 
-This module supports Deno v1.13.0 or later.
+This module supports Deno v1.13.0 or later. The
+[Zero-copy ArrayBuffer transfers between
+workers](https://deno.com/blog/v1.14#zero-copy-arraybuffer-transfers-between-workers)
+is supported from Deno 1.14.0.
 
 Note that this package requires
 [`Worker.postMessage` supports structured clone
