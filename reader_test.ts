@@ -104,6 +104,8 @@ Deno.test(
 Deno.test({
   name: "WorkerReader properly stop reading when it' closed",
   fn: async () => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const worker: WorkerForWorkerReader = {
       onmessage() {},
       terminate() {},
@@ -115,9 +117,12 @@ Deno.test({
       }
     };
     await Promise.race([
-      Promise.all([consumer(), delay(10).then(() => reader.close())]),
-      delay(100).then(() => Promise.reject("Timeout")),
+      Promise.all([
+        consumer(),
+        delay(10, { signal }).then(() => reader.close()),
+      ]),
+      delay(100, { signal }).then(() => Promise.reject("Timeout")),
     ]);
+    controller.abort();
   },
-  sanitizeOps: false,
 });
