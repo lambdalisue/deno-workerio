@@ -1,4 +1,4 @@
-import { io } from "./deps_test.ts";
+import { streams } from "./deps_test.ts";
 import { WorkerReader, WorkerWriter } from "./mod.ts";
 
 async function main(): Promise<void> {
@@ -7,8 +7,8 @@ async function main(): Promise<void> {
   const reader = new WorkerReader(worker);
   const writer = new WorkerWriter(worker);
 
-  for await (const data of io.iter(reader)) {
-    await io.writeAll(writer, data);
+  for await (const data of streams.iterateReader(reader)) {
+    await streams.writeAll(writer, data);
   }
 }
 

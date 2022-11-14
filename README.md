@@ -7,18 +7,7 @@
 [Deno][deno] module to translate Worker's system of messages into
 [Reader][reader] and [Writer][writer].
 
-This module supports Deno v1.13.0 or later. The
-[Zero-copy ArrayBuffer transfers between
-workers](https://deno.com/blog/v1.14#zero-copy-arraybuffer-transfers-between-workers)
-is supported from Deno 1.14.0.
-
-Note that this package requires
-[`Worker.postMessage` supports structured clone
-algorithm](https://deno.com/blog/v1.10#worker.postmessage-supports-structured-clone-algorithm).
-
-Note that this package accesses `Deno` namespace thus
-[Using Deno in worker](https://deno.land/manual@v1.11.0/runtime/workers#using-deno-in-worker)
-must be enabled.
+This module supports Deno v1.22.0 or later.
 
 [deno]: https://deno.land/
 [reader]: https://doc.deno.land/builtin/stable#Deno.Reader
@@ -39,11 +28,6 @@ const encoder = new TextEncoder();
 
 const worker = new Worker(new URL("./worker.ts", import.meta.url).href, {
   type: "module",
-  // NOTE:
-  // WorkerReader/WorkerWriter need to access 'Deno' namespace.
-  deno: {
-    namespace: true,
-  },
 });
 
 const reader = new WorkerReader(worker);
@@ -90,7 +74,7 @@ You can run benchmark of `WorkerReader` and `WorkerWriter` with the following
 command:
 
 ```
-$ deno run --no-check --unstable --allow-read --allow-net ./benchmark/benchmark.ts
+$ deno run --no-check --allow-read --allow-net ./benchmark/benchmark.ts
 ===========================================================
 Transfer: 1 MiB
 N:        5 times
@@ -112,7 +96,7 @@ Use `-n` to change the number of tries and `-size` to the size of the buffer (in
 MB) like:
 
 ```
-$ deno run --no-check --unstable --allow-read --allow-net ./benchmark/benchmark.ts -n 3 --size 8
+$ deno run --no-check --allow-read --allow-net ./benchmark/benchmark.ts -n 3 --size 8
 ===========================================================
 Transfer: 8 MiB
 N:        3 times

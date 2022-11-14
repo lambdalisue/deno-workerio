@@ -21,17 +21,16 @@ jobs:
           - ubuntu-latest
         version:
           - "1.x"
-          - "1.13.x"
-          - "1.14.x"
+          - "1.22.x"
     runs-on: ${{ matrix.runner }}
     steps:
       - run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: denoland/setup-deno@v1
         with:
           deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ${{ env.DENO_DIR }}
           key: ${{ runner.os }}-deno-${{ matrix.version }}-${{ hashFiles('**/*.ts') }}
@@ -57,17 +56,16 @@ jobs:
           - ubuntu-latest
         version:
           - "1.x"
-          - "1.13.x"
-          - "1.14.x"
+          - "1.22.x"
     runs-on: ${{ matrix.runner }}
     steps:
       - run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: denoland/setup-deno@v1
         with:
           deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: cache
         with:
           path: ${{ env.DENO_DIR }}

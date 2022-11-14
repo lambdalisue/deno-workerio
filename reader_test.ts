@@ -1,4 +1,4 @@
-import { assert, assertEquals, delay, io } from "./deps_test.ts";
+import { assert, assertEquals, delay, streams } from "./deps_test.ts";
 import { WorkerForWorkerReader, WorkerReader } from "./mod.ts";
 
 Deno.test(
@@ -112,7 +112,7 @@ Deno.test({
     };
     const reader = new WorkerReader(worker);
     const consumer = async () => {
-      for await (const _ of io.iter(reader)) {
+      for await (const _ of streams.iterateReader(reader)) {
         // Do NOTHING
       }
     };
