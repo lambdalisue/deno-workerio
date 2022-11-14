@@ -16,8 +16,7 @@ export class WorkerWriter implements Deno.Writer {
    * https://github.com/lambdalisue/deno-workerio/issues/5
    */
   write(p: Uint8Array): Promise<number> {
-    const c = new Uint8Array(p);
-    this.#worker.postMessage(c, [c.buffer]);
+    this.#worker.postMessage(p);
     return Promise.resolve(p.length);
   }
 }
