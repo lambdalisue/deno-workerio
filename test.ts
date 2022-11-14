@@ -16,9 +16,6 @@ Deno.test({
       new URL("./test_worker.ts", import.meta.url).href,
       {
         type: "module",
-        deno: {
-          namespace: true,
-        },
       },
     );
     try {
@@ -61,9 +58,6 @@ Deno.test({
       new URL("./test_worker.ts", import.meta.url).href,
       {
         type: "module",
-        deno: {
-          namespace: true,
-        },
       },
     );
     try {
@@ -106,9 +100,6 @@ Deno.test({
       new URL("./test_worker.ts", import.meta.url).href,
       {
         type: "module",
-        deno: {
-          namespace: true,
-        },
       },
     );
     try {

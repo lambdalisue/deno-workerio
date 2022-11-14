@@ -53,9 +53,6 @@ async function main(): Promise<void> {
     new URL("../test_worker.ts", import.meta.url).href,
     {
       type: "module",
-      deno: {
-        namespace: true,
-      },
     },
   );
   try {
