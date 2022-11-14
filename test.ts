@@ -1,4 +1,4 @@
-import { assert, assertEquals, io } from "./deps_test.ts";
+import { assert, assertEquals, io, streams } from "./deps_test.ts";
 import { WorkerReader, WorkerWriter } from "./mod.ts";
 
 async function timeIt(fn: () => Promise<void>): Promise<number> {
@@ -26,12 +26,14 @@ Deno.test({
       const buffer = new Uint8Array(size);
 
       const consumer = async () => {
-        const r = await io.readAll(new io.LimitedReader(reader, size));
+        const r = await streams.readAll(
+          new io.LimitedReader(reader, size),
+        );
         assertEquals(r.length, size);
       };
 
       const producer = async () => {
-        await io.writeAll(writer, buffer);
+        await streams.writeAll(writer, buffer);
       };
 
       const [rt, wt] = await Promise.all([
@@ -68,12 +70,14 @@ Deno.test({
       const buffer = new Uint8Array(size);
 
       const consumer = async () => {
-        const r = await io.readAll(new io.LimitedReader(reader, size));
+        const r = await streams.readAll(
+          new io.LimitedReader(reader, size),
+        );
         assertEquals(r.length, size);
       };
 
       const producer = async () => {
-        await io.writeAll(writer, buffer);
+        await streams.writeAll(writer, buffer);
       };
 
       const [rt, wt] = await Promise.all([
@@ -110,12 +114,12 @@ Deno.test({
       const buffer = new Uint8Array(size);
 
       const consumer = async () => {
-        const r = await io.readAll(new io.LimitedReader(reader, size));
+        const r = await streams.readAll(new io.LimitedReader(reader, size));
         assertEquals(r.length, size);
       };
 
       const producer = async () => {
-        await io.writeAll(writer, buffer);
+        await streams.writeAll(writer, buffer);
       };
 
       const [rt, wt] = await Promise.all([

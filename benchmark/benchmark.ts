@@ -1,5 +1,5 @@
 import { parse } from "https://deno.land/std@0.164.0/flags/mod.ts";
-import { assertEquals, delay, io } from "../deps_test.ts";
+import { assertEquals, delay, io, streams } from "../deps_test.ts";
 import { WorkerReader, WorkerWriter } from "../mod.ts";
 
 async function timeout(d: number): Promise<never> {
@@ -22,12 +22,12 @@ async function benchmark(
   const size = buffer.length;
 
   const consumer = async () => {
-    const r = await io.readAll(new io.LimitedReader(reader, size));
+    const r = await streams.readAll(new io.LimitedReader(reader, size));
     assertEquals(r.length, size);
   };
 
   const producer = async () => {
-    await io.writeAll(writer, buffer);
+    await streams.writeAll(writer, buffer);
   };
 
   const [rt, wt] = await Promise.race([
@@ -45,8 +45,8 @@ async function main(): Promise<void> {
   const args = parse(Deno.args, {
     string: ["n", "size"],
     default: {
-      n: 5,
-      size: 10,
+      n: "5",
+      size: "10",
     },
   });
   const worker = new Worker(

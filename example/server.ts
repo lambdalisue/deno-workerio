@@ -1,4 +1,4 @@
-import * as io from "https://deno.land/std@0.164.0/io/mod.ts";
+import * as streams from "https://deno.land/std@0.164.0/streams/mod.ts";
 import { WorkerReader, WorkerWriter } from "../mod.ts";
 
 const decoder = new TextDecoder();
@@ -17,7 +17,7 @@ const writer = new WorkerWriter(worker);
 await writer.write(encoder.encode("Hello"));
 await writer.write(encoder.encode("World"));
 
-for await (const data of io.iter(reader)) {
+for await (const data of streams.iterateReader(reader)) {
   const text = decoder.decode(data);
   console.log(text);
 }
