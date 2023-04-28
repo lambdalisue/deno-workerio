@@ -1,5 +1,8 @@
-import { parse } from "https://deno.land/std@0.164.0/flags/mod.ts";
-import { assertEquals, delay, io, streams } from "../deps_test.ts";
+import { parse } from "https://deno.land/std@0.185.0/flags/mod.ts";
+import { delay } from "https://deno.land/std@0.185.0/async/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.185.0/testing/asserts.ts";
+import * as io from "https://deno.land/std@0.185.0/io/mod.ts";
+import * as streams from "https://deno.land/std@0.185.0/streams/mod.ts";
 import { WorkerReader, WorkerWriter } from "../mod.ts";
 
 async function timeout(d: number): Promise<never> {

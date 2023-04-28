@@ -1,4 +1,9 @@
-import { assert, assertEquals, delay, streams } from "./deps_test.ts";
+import {
+  assert,
+  assertEquals,
+} from "https://deno.land/std@0.185.0/testing/asserts.ts";
+import { delay } from "https://deno.land/std@0.185.0/async/mod.ts";
+import * as streams from "https://deno.land/std@0.185.0/streams/mod.ts";
 import { WorkerForWorkerReader, WorkerReader } from "./mod.ts";
 
 Deno.test(
