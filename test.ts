@@ -7,10 +7,10 @@ import * as streams from "https://deno.land/std@0.185.0/streams/mod.ts";
 import { WorkerReader, WorkerWriter } from "./mod.ts";
 
 async function timeIt(fn: () => Promise<void>): Promise<number> {
-  const start = new Date();
+  const start = performance.now();
   await fn();
-  const end = new Date();
-  const elapsed = end.getTime() - start.getTime();
+  const end = performance.now();
+  const elapsed = end - start;
   return elapsed;
 }
 

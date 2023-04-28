@@ -10,10 +10,10 @@ async function timeout(d: number): Promise<never> {
 }
 
 async function timeIt(fn: () => Promise<void>): Promise<number> {
-  const start = new Date();
+  const start = performance.now();
   await fn();
-  const end = new Date();
-  const elapsed = end.getTime() - start.getTime();
+  const end = performance.now();
+  const elapsed = end - start;
   return elapsed;
 }
 
