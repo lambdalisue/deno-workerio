@@ -1,58 +1,15 @@
 name: Test
 
-env:
-  DENO_DIR: ".deno"
-
 on:
   schedule:
     - cron: "0 7 * * 0"
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  check:
-    strategy:
-      matrix:
-        runner:
-          - ubuntu-latest
-        version:
-          - "1.x"
-          - "1.22.x"
-    runs-on: ${{ matrix.runner }}
-    steps:
-      - run: git config --global core.autocrlf false
-        if: runner.os == 'Windows'
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v3
-        with:
-          path: ${{ env.DENO_DIR }}
-          key: ${{ runner.os }}-deno-${{ matrix.version }}-${{ hashFiles('**/*.ts') }}
-          restore-keys: |
-            ${{ runner.os }}-deno-${{ matrix.version }}-
-            ${{ runner.os }}-deno-
-      - name: Lint check
-        run: |
-          make lint
-      - name: Format check
-        run: |
-          make fmt-check
-      - name: Type check
-        run: |
-          make type-check
-
   test:
     strategy:
       matrix:
         runner:
-          - windows-latest
-          - macos-latest
           - ubuntu-latest
         version:
           - "1.x"
@@ -66,14 +23,22 @@ jobs:
         with:
           deno-version: "${{ matrix.version }}"
       - uses: actions/cache@v3
-        id: cache
         with:
-          path: ${{ env.DENO_DIR }}
-          key: ${{ runner.os }}-deno-${{ matrix.version }}-${{ hashFiles('**/*.ts') }}
+          key: ${{ runner.os }}-deno-${{ hashFiles('**/*.ts') }}
           restore-keys: |
-            ${{ runner.os }}-deno-${{ matrix.version }}-
             ${{ runner.os }}-deno-
+          path: |
+            /home/runner/.deno
+            /home/runner/.cache/deno/deps/https/deno.land
       - name: Test
         run: |
-          make test
-        timeout-minutes: 5
+          deno task test
+      - name: Type check
+        run: |
+          deno task check
+      - name: Lint check
+        run: |
+          deno lint
+      - name: Format check
+        run: |
+          deno fmt && git diff --exit-code
