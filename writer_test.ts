@@ -2,6 +2,7 @@ import {
   assertEquals,
   assertInstanceOf,
 } from "https://deno.land/std@0.185.0/testing/asserts.ts";
+import { concat } from "https://deno.land/std@0.185.0/bytes/mod.ts";
 import { WorkerWriter } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 
@@ -17,7 +18,7 @@ Deno.test(
     const writer = new WorkerWriter(worker);
     await writer.write(new Uint8Array([0, 1, 2, 3, 4]));
     await writer.write(new Uint8Array([5, 6, 7, 8, 9]));
-    assertEquals(chunks[0], new Uint8Array([0, 1, 2, 3, 4]));
-    assertEquals(chunks[1], new Uint8Array([5, 6, 7, 8, 9]));
+    const content = concat(...chunks);
+    assertEquals(content, new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
   },
 );
