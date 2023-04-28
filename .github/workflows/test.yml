@@ -42,3 +42,6 @@ jobs:
       - name: Format check
         run: |
           deno fmt && git diff --exit-code
+      - name: Bench
+        run: |
+          deno task bench
