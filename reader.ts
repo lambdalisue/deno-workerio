@@ -1,15 +1,14 @@
 import { Queue } from "https://deno.land/x/async@v1.0/queue.ts";
 import { Deferred, deferred } from "https://deno.land/std@0.185.0/async/mod.ts";
-import { WorkerForWorkerReader } from "./types.ts";
 
 export class WorkerReader implements Deno.Reader, Deno.Closer {
   #queue?: Queue<Uint8Array>;
   #remain: Uint8Array;
   #closed: boolean;
   #waiter: Deferred<void>;
-  #worker: WorkerForWorkerReader;
+  #worker: Worker;
 
-  constructor(worker: WorkerForWorkerReader) {
+  constructor(worker: Worker) {
     this.#queue = new Queue();
     this.#remain = new Uint8Array();
     this.#closed = false;

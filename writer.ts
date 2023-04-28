@@ -1,9 +1,7 @@
-import { WorkerForWorkerWriter } from "./types.ts";
-
 export class WorkerWriter implements Deno.Writer {
-  #worker: WorkerForWorkerWriter;
+  #worker: Worker;
 
-  constructor(worker: WorkerForWorkerWriter) {
+  constructor(worker: Worker) {
     this.#worker = worker;
   }
 
