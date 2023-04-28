@@ -7,7 +7,7 @@
 [Deno][deno] module to translate Worker's system of messages into
 [Reader][reader] and [Writer][writer].
 
-This module supports Deno v1.22.0 or later.
+This module supports Deno v1.28.0 or later.
 
 [deno]: https://deno.land/
 [reader]: https://doc.deno.land/builtin/stable#Deno.Reader
