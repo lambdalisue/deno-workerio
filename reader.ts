@@ -1,4 +1,5 @@
-import { Deferred, deferred, Queue } from "./deps.ts";
+import { Queue } from "https://deno.land/x/async@v1.0/queue.ts";
+import { Deferred, deferred } from "https://deno.land/std@0.185.0/async/mod.ts";
 import { WorkerForWorkerReader } from "./types.ts";
 
 export class WorkerReader implements Deno.Reader, Deno.Closer {

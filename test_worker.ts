@@ -1,4 +1,4 @@
-import { streams } from "./deps_test.ts";
+import * as streams from "https://deno.land/std@0.185.0/streams/mod.ts";
 import { WorkerReader, WorkerWriter } from "./mod.ts";
 
 async function main(): Promise<void> {
