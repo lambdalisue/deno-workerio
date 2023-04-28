@@ -47,3 +47,31 @@ Deno.test(
     assertEquals(content, new Uint8Array([0, 1, 2, 3, 4]));
   },
 );
+
+Deno.test(
+  "WorkerReader reads data posted to the worker (closed with null)",
+  async () => {
+    const worker = new MockWorker();
+    const reader = new WorkerReader(worker);
+    worker.postMessage(new Uint8Array([0, 1, 2, 3, 4]));
+    worker.postMessage(new Uint8Array([5, 6, 7, 8, 9]));
+    worker.postMessage(null);
+
+    const content = await streams.readAll(reader);
+    assertEquals(content, new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
+  },
+);
+
+Deno.test(
+  "WorkerReader reads data posted to the worker prior to close (closed with null)",
+  async () => {
+    const worker = new MockWorker();
+    const reader = new WorkerReader(worker);
+    worker.postMessage(new Uint8Array([0, 1, 2, 3, 4]));
+    worker.postMessage(null);
+    worker.postMessage(new Uint8Array([5, 6, 7, 8, 9]));
+
+    const content = await streams.readAll(reader);
+    assertEquals(content, new Uint8Array([0, 1, 2, 3, 4]));
+  },
+);
