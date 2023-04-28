@@ -1,4 +1,4 @@
-import { parse } from "https://deno.land/std@0.164.0/flags/mod.ts";
+import { parse } from "https://deno.land/std@0.185.0/flags/mod.ts";
 import { assertEquals, delay, io, streams } from "../deps_test.ts";
 import { WorkerReader, WorkerWriter } from "../mod.ts";
 
