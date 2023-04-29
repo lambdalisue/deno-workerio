@@ -1,7 +1,9 @@
 /**
- * A `WorkerWriter` is a `Deno.Writer` that writes data to a `Worker` through `postMessage`.
+ * A `WorkerWriter` is a `Deno.Writer` that defines a data channel of a `Worker` and writes data to it.
+ *
+ * It notifies the peer that the data channel has finished writing, by sending a `null` message.
  */
-export class WorkerWriter implements Deno.Writer {
+export class WorkerWriter implements Deno.Writer, Deno.Closer {
   #worker: Worker;
 
   /**
@@ -26,5 +28,12 @@ export class WorkerWriter implements Deno.Writer {
   write(p: Uint8Array): Promise<number> {
     this.#worker.postMessage(p);
     return Promise.resolve(p.length);
+  }
+
+  /**
+   * Notify the peer that the data channel has finished writing, by sending a `null` message.
+   */
+  close(): void {
+    this.#worker.postMessage(null);
   }
 }

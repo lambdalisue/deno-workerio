@@ -22,3 +22,18 @@ Deno.test(
     assertEquals(content, new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
   },
 );
+
+Deno.test(
+  "WorkerWriter send 'null' when 'close' method is called",
+  () => {
+    const worker = new MockWorker();
+    const chunks: null[] = [];
+    worker.addEventListener("message", (ev) => {
+      assertInstanceOf(ev, MessageEvent<null>);
+      chunks.push(ev.data);
+    });
+    const writer = new WorkerWriter(worker);
+    writer.close();
+    assertEquals(chunks, [null]);
+  },
+);
