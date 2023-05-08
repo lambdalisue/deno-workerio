@@ -1,7 +1,7 @@
 import {
   assertEquals,
   assertInstanceOf,
-} from "https://deno.land/std@0.185.0/testing/asserts.ts";
+} from "https://deno.land/std@0.186.0/testing/asserts.ts";
 import { WorkerWriter, writableStreamFromWorker } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 

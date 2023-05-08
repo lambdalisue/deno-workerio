@@ -1,6 +1,6 @@
-import { assertEquals } from "https://deno.land/std@0.185.0/testing/asserts.ts";
-import { WorkerReader as WorkerReaderV2 } from "https://deno.land/x/workerio@v2.0.1/mod.ts";
-import { WorkerReader as WorkerReaderV1 } from "https://deno.land/x/workerio@v1.4.4/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.186.0/testing/asserts.ts";
+import { WorkerReader as WorkerReaderV2 } from "https://deno.land/x/workerio@v3.0.1/mod.ts";
+import { WorkerReader as WorkerReaderV1 } from "https://deno.land/x/workerio@v3.0.1/mod.ts";
 import { WorkerReader } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 
