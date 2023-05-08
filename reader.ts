@@ -1,28 +1,4 @@
-/**
- * A helper class representing a condition that a `WorkerReader` waits for.
- * The `wait` method returns a promise that is resolved when `notify` is called.
- */
-class Condition {
-  #resolve: (() => void) | undefined;
-
-  /**
-   * Notify to resolve promise that is returned by `wait`
-   */
-  notify(): void {
-    if (this.#resolve) {
-      this.#resolve();
-    }
-  }
-
-  /**
-   * Returns a promise that is resolved when `notify` is called.
-   */
-  wait(): Promise<void> {
-    return new Promise<void>((resolve) => {
-      this.#resolve = resolve;
-    });
-  }
-}
+import { Notify } from "https://deno.land/x/async@v2.0.2/notify.ts";
 
 /**
  * A `WorkerReader` is a `Deno.Reader` and `Deno.Closer` that reads data from a `Worker`.
@@ -30,11 +6,10 @@ class Condition {
  * The worker is automatically closed when `null` is received from the `Worker`.
  */
 export class WorkerReader implements Deno.Reader, Deno.Closer {
-  #condition: Condition;
-  #queue: Uint8Array[];
-  #remain: Uint8Array;
-  #closed: boolean;
-  #onmessage: (ev: MessageEvent) => void;
+  #notify: Notify = new Notify();
+  #queue: Uint8Array[] = [];
+  #remain: Uint8Array = new Uint8Array();
+  #closed = false;
   #worker: Worker;
 
   /**
@@ -43,22 +18,19 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
    * @param worker The `Worker` to read from.
    */
   constructor(worker: Worker) {
-    this.#condition = new Condition();
-    this.#queue = [];
-    this.#remain = new Uint8Array();
-    this.#closed = false;
-    this.#onmessage = (ev) => {
+    this.#worker = worker;
+    this.#worker.onmessage = (ev: MessageEvent) => {
       if (ev.data === null) {
         this.close();
       } else if (ev.data instanceof Uint8Array) {
-        this.#queue.push(ev.data);
-        this.#condition.notify();
+        if (!this.#closed) {
+          this.#queue.push(ev.data);
+          this.#notify.notify();
+        }
       } else {
         throw new Error("Unexpected data posted");
       }
     };
-    this.#worker = worker;
-    this.#worker.addEventListener("message", this.#onmessage);
   }
 
   /**
@@ -68,33 +40,35 @@ export class WorkerReader implements Deno.Reader, Deno.Closer {
    * @returns The number of bytes read, or `null` if the `Worker` is closed.
    */
   async read(p: Uint8Array): Promise<number | null> {
-    if (!this.#remain.length && this.#queue.length) {
-      // Poll from queue to read received data
-      this.#remain = this.#queue.shift()!;
-    }
-    if (this.#remain.length) {
-      // Return received (remaining) data
-      const n = Math.min(p.byteLength, this.#remain.byteLength);
-      const d = this.#remain.subarray(0, n);
-      this.#remain = this.#remain.subarray(n);
-      p.set(d);
-      return n;
-    }
-    if (this.#closed) {
-      // Worker is closed
-      return null;
-    } else {
+    while (true) {
+      if (this.#remain.length) {
+        return this.#readFromRemain(p);
+      } else if (this.#queue.length) {
+        // Poll from queue to read received data
+        this.#remain = this.#queue.shift()!;
+        return this.#readFromRemain(p);
+      } else if (this.#closed) {
+        // Worker is closed
+        return null;
+      }
       // Wait until next data is received
-      await this.#condition.wait();
-      return await this.read(p);
+      await this.#notify.notified();
     }
+  }
+
+  #readFromRemain(p: Uint8Array): number {
+    const n = p.byteLength;
+    const d = this.#remain.subarray(0, n);
+    this.#remain = this.#remain.subarray(n);
+    p.set(d);
+    return d.byteLength;
   }
 
   /**
    * Closes the `WorkerReader`.
    */
   close(): void {
-    this.#worker.removeEventListener("message", this.#onmessage);
     this.#closed = true;
+    this.#notify.notify();
   }
 }
