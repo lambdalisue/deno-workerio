@@ -26,7 +26,7 @@ export class WorkerWriter implements Deno.Writer, Deno.Closer {
    * @returns A promise resolving to the number of bytes written.
    */
   write(p: Uint8Array): Promise<number> {
-    this.#worker.postMessage(p);
+    this.#worker.postMessage(p, [p.buffer]);
     return Promise.resolve(p.length);
   }
 
