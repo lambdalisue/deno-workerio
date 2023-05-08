@@ -1,6 +1,4 @@
 import { assertEquals } from "https://deno.land/std@0.185.0/testing/asserts.ts";
-import { concat } from "https://deno.land/std@0.185.0/bytes/mod.ts";
-import * as streams from "https://deno.land/std@0.185.0/streams/mod.ts";
 import {
   WorkerReader as WorkerReaderV2,
   WorkerWriter as WorkerWriterV2,
@@ -49,18 +47,18 @@ for (const size of sizes) {
       };
 
       const consumer = async () => {
-        const chunks: Uint8Array[] = [];
+        let total = 0;
         for await (const chunk of rstream) {
-          chunks.push(chunk);
+          total += chunk.length;
         }
-        return concat(...chunks);
+        return total;
       };
 
-      const [_, content] = await Promise.all([
+      const [_, total] = await Promise.all([
         producer(),
         consumer(),
       ]);
-      assertEquals(content.length, size * count);
+      assertEquals(total, size * count);
     },
   );
 
@@ -81,15 +79,22 @@ for (const size of sizes) {
         writer.close();
       };
 
-      const consumer = () => {
-        return streams.readAll(reader);
+      const consumer = async () => {
+        let total = 0;
+        while (true) {
+          const p = new Uint8Array(1024);
+          const n = await reader.read(p);
+          if (n === null) break;
+          total += n;
+        }
+        return total;
       };
 
-      const [_, content] = await Promise.all([
+      const [_, total] = await Promise.all([
         producer(),
         consumer(),
       ]);
-      assertEquals(content.length, size * count);
+      assertEquals(total, size * count);
     },
   );
 
@@ -110,15 +115,22 @@ for (const size of sizes) {
         reader.close();
       };
 
-      const consumer = () => {
-        return streams.readAll(reader);
+      const consumer = async () => {
+        let total = 0;
+        while (true) {
+          const p = new Uint8Array(1024);
+          const n = await reader.read(p);
+          if (n === null) break;
+          total += n;
+        }
+        return total;
       };
 
-      const [_, content] = await Promise.all([
+      const [_, total] = await Promise.all([
         producer(),
         consumer(),
       ]);
-      assertEquals(content.length, size * count);
+      assertEquals(total, size * count);
     },
   );
 
@@ -139,15 +151,22 @@ for (const size of sizes) {
         reader.close();
       };
 
-      const consumer = () => {
-        return streams.readAll(reader);
+      const consumer = async () => {
+        let total = 0;
+        while (true) {
+          const p = new Uint8Array(1024);
+          const n = await reader.read(p);
+          if (n === null) break;
+          total += n;
+        }
+        return total;
       };
 
-      const [_, content] = await Promise.all([
+      const [_, total] = await Promise.all([
         producer(),
         consumer(),
       ]);
-      assertEquals(content.length, size * count);
+      assertEquals(total, size * count);
     },
   );
 }

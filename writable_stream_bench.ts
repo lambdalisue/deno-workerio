@@ -2,7 +2,6 @@ import {
   assertEquals,
   assertInstanceOf,
 } from "https://deno.land/std@0.185.0/testing/asserts.ts";
-import { concat } from "https://deno.land/std@0.185.0/bytes/mod.ts";
 import { WorkerWriter, writableStreamFromWorker } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 
@@ -16,8 +15,6 @@ const sizes = [
 ];
 
 for (const size of sizes) {
-  const data = new Uint8Array(size);
-
   Deno.bench(
     `writableStreamFromWorker (${
       size.toString().padStart(2)
@@ -28,18 +25,19 @@ for (const size of sizes) {
     },
     async () => {
       const worker = new MockWorker();
-      const chunks: Uint8Array[] = [];
+      let total = 0;
       worker.addEventListener("message", (ev) => {
         assertInstanceOf(ev, MessageEvent<Uint8Array>);
-        chunks.push(ev.data);
+        total += ev.data.length;
       });
       const wstream = writableStreamFromWorker(worker);
       const writer = wstream.getWriter();
       for (let i = 0; i < count; i++) {
+        const data = new Uint8Array(size);
         await writer.write(data);
       }
-      const content = concat(...chunks);
-      assertEquals(content.length, size * count);
+      writer.releaseLock();
+      assertEquals(total, size * count);
     },
   );
 
@@ -50,17 +48,17 @@ for (const size of sizes) {
     },
     async () => {
       const worker = new MockWorker();
-      const chunks: Uint8Array[] = [];
+      let total = 0;
       worker.addEventListener("message", (ev) => {
         assertInstanceOf(ev, MessageEvent<Uint8Array>);
-        chunks.push(ev.data);
+        total += ev.data.length;
       });
       const writer = new WorkerWriter(worker);
       for (let i = 0; i < count; i++) {
+        const data = new Uint8Array(size);
         await writer.write(data);
       }
-      const content = concat(...chunks);
-      assertEquals(content.length, size * count);
+      assertEquals(total, size * count);
     },
   );
 }
