@@ -1,4 +1,14 @@
 /**
+ * Options for creating a writable stream from a worker.
+ */
+export type WritableStreamFromWorkerOptions = {
+  /**
+   * The queuing strategy to create the `WritableStream` with.
+   */
+  strategy?: QueuingStrategy<Uint8Array>;
+};
+
+/**
  * Creates a `WritableStream` that writes data to a `Worker` through `Worker.postMessage`.
  *
  * @param worker The `Worker` to write data to.
@@ -6,7 +16,11 @@
  */
 export function writableStreamFromWorker(
   worker: Worker,
+  options: WritableStreamFromWorkerOptions = {},
 ): WritableStream<Uint8Array> {
+  const {
+    strategy = new ByteLengthQueuingStrategy({ highWaterMark: 1024 }),
+  } = options;
   return new WritableStream({
     /**
      * Writes a chunk of data to the `Worker` through `Worker.postMessage`.
@@ -15,7 +29,7 @@ export function writableStreamFromWorker(
      */
     write(chunk, controller) {
       try {
-        worker.postMessage(chunk);
+        worker.postMessage(chunk, [chunk.buffer]);
       } catch (e) {
         controller.error(e);
       }
@@ -26,5 +40,5 @@ export function writableStreamFromWorker(
     close() {
       worker.postMessage(null);
     },
-  });
+  }, strategy);
 }

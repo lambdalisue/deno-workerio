@@ -1,6 +1,6 @@
-import { assertEquals } from "https://deno.land/std@0.185.0/testing/asserts.ts";
-import { delay } from "https://deno.land/std@0.185.0/async/mod.ts";
-import * as streams from "https://deno.land/std@0.185.0/streams/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.186.0/testing/asserts.ts";
+import { delay } from "https://deno.land/std@0.186.0/async/mod.ts";
+import * as streams from "https://deno.land/std@0.186.0/streams/mod.ts";
 import { WorkerReader } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 

@@ -1,6 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.185.0/testing/asserts.ts";
-import { concat } from "https://deno.land/std@0.185.0/bytes/mod.ts";
-import * as streams from "https://deno.land/std@0.185.0/streams/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.186.0/testing/asserts.ts";
 import { readableStreamFromWorker, WorkerReader } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 
@@ -14,8 +12,6 @@ const sizes = [
 ];
 
 for (const size of sizes) {
-  const data = new Uint8Array(size);
-
   Deno.bench(
     `readableStreamFromWorker (${
       size.toString().padStart(2)
@@ -28,15 +24,15 @@ for (const size of sizes) {
       const worker = new MockWorker();
       const rstream = readableStreamFromWorker(worker);
       for (let i = 0; i < count; i++) {
+        const data = new Uint8Array(size);
         worker.postMessage(data);
       }
       worker.postMessage(null);
-      const chunks = [];
+      let total = 0;
       for await (const chunk of rstream) {
-        chunks.push(chunk);
+        total += chunk.length;
       }
-      const content = concat(...chunks);
-      assertEquals(content.length, size * count);
+      assertEquals(total, size * count);
     },
   );
 
@@ -49,11 +45,18 @@ for (const size of sizes) {
       const worker = new MockWorker();
       const reader = new WorkerReader(worker);
       for (let i = 0; i < count; i++) {
+        const data = new Uint8Array(size);
         worker.postMessage(data);
       }
       worker.postMessage(null);
-      const content = await streams.readAll(reader);
-      assertEquals(content.length, size * count);
+      let total = 0;
+      while (true) {
+        const p = new Uint8Array(1024);
+        const n = await reader.read(p);
+        if (n === null) break;
+        total += n;
+      }
+      assertEquals(total, size * count);
     },
   );
 }

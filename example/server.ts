@@ -1,4 +1,4 @@
-import * as streams from "https://deno.land/std@0.185.0/streams/mod.ts";
+import * as streams from "https://deno.land/std@0.186.0/streams/mod.ts";
 import { WorkerReader, WorkerWriter } from "../mod.ts";
 
 const decoder = new TextDecoder();

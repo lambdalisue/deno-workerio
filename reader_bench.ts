@@ -1,7 +1,6 @@
-import { assertEquals } from "https://deno.land/std@0.185.0/testing/asserts.ts";
-import * as streams from "https://deno.land/std@0.185.0/streams/mod.ts";
-import { WorkerReader as WorkerReaderV2 } from "https://deno.land/x/workerio@v2.0.1/mod.ts";
-import { WorkerReader as WorkerReaderV1 } from "https://deno.land/x/workerio@v1.4.4/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.186.0/testing/asserts.ts";
+import { WorkerReader as WorkerReaderV2 } from "https://deno.land/x/workerio@v3.0.1/mod.ts";
+import { WorkerReader as WorkerReaderV1 } from "https://deno.land/x/workerio@v3.0.1/mod.ts";
 import { WorkerReader } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 
@@ -15,8 +14,6 @@ const sizes = [
 ];
 
 for (const size of sizes) {
-  const data = new Uint8Array(size);
-
   Deno.bench(`WorkerReader (${size.toString().padStart(2)} Bytes x ${count})`, {
     group: size.toString(),
     baseline: true,
@@ -24,11 +21,18 @@ for (const size of sizes) {
     const worker = new MockWorker();
     const reader = new WorkerReader(worker);
     for (let i = 0; i < count; i++) {
+      const data = new Uint8Array(size);
       worker.postMessage(data);
     }
     reader.close();
-    const content = await streams.readAll(reader);
-    assertEquals(content.length, size * count);
+    let total = 0;
+    while (true) {
+      const p = new Uint8Array(1024);
+      const n = await reader.read(p);
+      if (n === null) break;
+      total += n;
+    }
+    assertEquals(total, size * count);
   });
 
   Deno.bench(
@@ -40,11 +44,18 @@ for (const size of sizes) {
       const worker = new MockWorker();
       const reader = new WorkerReaderV2(worker);
       for (let i = 0; i < count; i++) {
+        const data = new Uint8Array(size);
         worker.postMessage(data);
       }
       reader.close();
-      const content = await streams.readAll(reader);
-      assertEquals(content.length, size * count);
+      let total = 0;
+      while (true) {
+        const p = new Uint8Array(1024);
+        const n = await reader.read(p);
+        if (n === null) break;
+        total += n;
+      }
+      assertEquals(total, size * count);
     },
   );
 
@@ -57,11 +68,18 @@ for (const size of sizes) {
       const worker = new MockWorker();
       const reader = new WorkerReaderV1(worker);
       for (let i = 0; i < count; i++) {
+        const data = new Uint8Array(size);
         worker.postMessage(data);
       }
       reader.close();
-      const content = await streams.readAll(reader);
-      assertEquals(content.length, size * count);
+      let total = 0;
+      while (true) {
+        const p = new Uint8Array(1024);
+        const n = await reader.read(p);
+        if (n === null) break;
+        total += n;
+      }
+      assertEquals(total, size * count);
     },
   );
 }

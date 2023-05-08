@@ -1,5 +1,5 @@
-import { assertEquals } from "https://deno.land/std@0.185.0/testing/asserts.ts";
-import { concat } from "https://deno.land/std@0.185.0/bytes/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.186.0/testing/asserts.ts";
+import { concat } from "https://deno.land/std@0.186.0/bytes/mod.ts";
 import { readableStreamFromWorker } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 

@@ -5,17 +5,79 @@
 [![Test](https://github.com/lambdalisue/deno-workerio/actions/workflows/test.yml/badge.svg)](https://github.com/lambdalisue/deno-workerio/actions/workflows/test.yml)
 
 [Deno][deno] module to translate Worker's system of messages into
-[Reader][reader] and [Writer][writer].
-
-This module supports Deno v1.28.0 or later.
+[`ReadableStream<Uint8Array>`][readablestream] and
+[`WritableStream<Uint8Array>`][writablestream] or [`Deno.Reader`][reader] and
+[`Deno.Writer`][writer].
 
 [deno]: https://deno.land/
 [reader]: https://doc.deno.land/builtin/stable#Deno.Reader
 [writer]: https://doc.deno.land/builtin/stable#Deno.Writer
+[ReadableStream]: https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
+[WritableStream]: https://developer.mozilla.org/en-US/docs/Web/API/WritableStream
 
 ## Example
 
-### Server
+### ReadableStream/WritableStream
+
+#### Server
+
+```typescript
+import {
+  readableStreamFromWorker,
+  writableStreamFromWorker,
+} from "https://deno.land/x/workerio/mod.ts";
+
+const decoder = new TextDecoder();
+const encoder = new TextEncoder();
+
+const worker = new Worker(new URL("./worker.ts", import.meta.url).href, {
+  type: "module",
+});
+
+const reader = readableStreamFromWorker(worker);
+const writer = writableStreamFromWorker(worker);
+const w = writer.getWriter();
+
+await w.write(encoder.encode("Hello"));
+await w.write(encoder.encode("World"));
+w.releaseLock();
+
+for await (const data of reader) {
+  const text = decoder.decode(data);
+  console.log(text);
+}
+```
+
+#### Worker
+
+```typescript
+import {
+  readableStreamFromWorker,
+  writableStreamFromWorker,
+} from "https://deno.land/x/workerio/mod.ts";
+
+const decoder = new TextDecoder();
+const encoder = new TextEncoder();
+
+async function main(): Promise<void> {
+  const worker = self as unknown as Worker;
+  const reader = readableStreamFromWorker(worker);
+  const writer = writableStreamFromWorker(worker);
+  const w = writer.getWriter();
+
+  for await (const data of reader) {
+    const text = decoder.decode(data);
+    await w.write(encoder.encode(`!!! ${text} !!!`));
+  }
+  w.releaseLock();
+}
+
+main().catch((e) => console.error(e));
+```
+
+### Deno.Reader/Deno.Writer
+
+#### Server
 
 ```typescript
 import {
@@ -42,7 +104,7 @@ for await (const data of Deno.iter(reader)) {
 }
 ```
 
-### Worker
+#### Worker
 
 ```typescript
 import {
@@ -54,8 +116,7 @@ const decoder = new TextDecoder();
 const encoder = new TextEncoder();
 
 async function main(): Promise<void> {
-  // deno-lint-ignore no-explicit-any
-  const worker = self as any;
+  const worker = self as unknown as Worker;
   const reader = new WorkerReader(worker);
   const writer = new WorkerWriter(worker);
 
@@ -67,52 +128,6 @@ async function main(): Promise<void> {
 
 main().catch((e) => console.error(e));
 ```
-
-## Benchmark
-
-You can run benchmark of `WorkerReader` and `WorkerWriter` with the following
-command:
-
-```
-$ deno run --no-check --allow-read --allow-net ./benchmark/benchmark.ts
-===========================================================
-Transfer: 1 MiB
-N:        5 times
-===========================================================
-Relaxing 1 sec ...
-Start benchmark
-1 Reader: 9 [ms] Writer: 0 [ms]
-2 Reader: 7 [ms] Writer: 0 [ms]
-3 Reader: 6 [ms] Writer: 1 [ms]
-4 Reader: 5 [ms] Writer: 1 [ms]
-5 Reader: 6 [ms] Writer: 0 [ms]
-===========================================================
-Reader: Avg. 6.6000 msec (1271.0 Mbps)
-Writer: Avg. 0.40000 msec (20972 Mbps)
-===========================================================
-```
-
-Use `-n` to change the number of tries and `-size` to the size of the buffer (in
-MB) like:
-
-```
-$ deno run --no-check --allow-read --allow-net ./benchmark/benchmark.ts -n 3 --size 8
-===========================================================
-Transfer: 8 MiB
-N:        3 times
-===========================================================
-Relaxing 1 sec ...
-Start benchmark
-1 Reader: 53 [ms] Writer: 7 [ms]
-2 Reader: 43 [ms] Writer: 1 [ms]
-3 Reader: 40 [ms] Writer: 1 [ms]
-===========================================================
-Reader: Avg. 45.333 msec (1480.3 Mbps)
-Writer: Avg. 3.0000 msec (22370 Mbps)
-===========================================================
-```
-
-See [Benchmark](./wiki/Benchmark) for various benchmarks.
 
 ## License
 
