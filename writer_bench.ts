@@ -1,9 +1,9 @@
 import {
   assertEquals,
   assertInstanceOf,
-} from "https://deno.land/std@0.186.0/testing/asserts.ts";
-import { WorkerWriter as WorkerWriterV2 } from "https://deno.land/x/workerio@v3.0.1/mod.ts";
-import { WorkerWriter as WorkerWriterV1 } from "https://deno.land/x/workerio@v3.0.1/mod.ts";
+} from "https://deno.land/std@0.224.0/testing/asserts.ts";
+import { WorkerWriter as WorkerWriterV2 } from "https://deno.land/x/workerio@v3.1.0/mod.ts";
+import { WorkerWriter as WorkerWriterV1 } from "https://deno.land/x/workerio@v3.1.0/mod.ts";
 import { WorkerWriter } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 

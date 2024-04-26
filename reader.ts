@@ -1,4 +1,4 @@
-import { Notify } from "https://deno.land/x/async@v2.0.2/notify.ts";
+import { Notify } from "https://deno.land/x/async@v2.1.0/notify.ts";
 
 /**
  * A `WorkerReader` is a `Deno.Reader` and `Deno.Closer` that reads data from a `Worker`.
