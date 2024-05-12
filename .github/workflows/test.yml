@@ -57,6 +57,9 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: ${{ env.DENO_VERSION }}
+      - name: Install aha
+        run: |
+          sudo apt-get install aha
       - name: Benchmark
         run: |
-          deno task bench
+          deno task bench | aha --no-header >> $GITHUB_STEP_SUMMARY
