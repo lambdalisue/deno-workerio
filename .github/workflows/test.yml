@@ -1,47 +1,62 @@
 name: Test
 
+env:
+  DENO_VERSION: 1.x
+
 on:
-  schedule:
-    - cron: "0 7 * * 0"
   push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - "**.md"
+      - "**.ts"
+      - "deno.jsonc"
+      - ".github/workflows/test.yml"
+  workflow_dispatch:
 
 jobs:
-  test:
-    strategy:
-      matrix:
-        runner:
-          - ubuntu-latest
-        version:
-          - "1.x"
-          - "1.28.x"
-    runs-on: ${{ matrix.runner }}
+  check:
+    runs-on: ubuntu-latest
     steps:
-      - run: git config --global core.autocrlf false
-        if: runner.os == 'Windows'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
         with:
-          deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v3
+          deno-version: ${{ env.DENO_VERSION }}
+      - name: Format
+        run: |
+          deno fmt --check
+      - name: Lint
+        run: deno lint
+      - name: Type check
+        run: deno task check
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
         with:
-          key: ${{ runner.os }}-deno-${{ hashFiles('**/*.ts') }}
-          restore-keys: |
-            ${{ runner.os }}-deno-
-          path: |
-            /home/runner/.deno
-            /home/runner/.cache/deno/deps/https/deno.land
+          deno-version: ${{ env.DENO_VERSION }}
       - name: Test
         run: |
-          deno task test
-      - name: Type check
-        run: |
-          deno task check
-      - name: Lint check
-        run: |
-          deno lint
-      - name: Format check
-        run: |
-          deno fmt && git diff --exit-code
-      - name: Bench
+          deno task test:coverage
+        timeout-minutes: 5
+      - run: |
+          deno task coverage --lcov > coverage.lcov
+      - uses: codecov/codecov-action@v4
+        with:
+          os: ${{ runner.os }}
+          files: ./coverage.lcov
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  bench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+      - name: Benchmark
         run: |
           deno task bench
