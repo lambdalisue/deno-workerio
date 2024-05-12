@@ -1,5 +1,5 @@
-import { assertEquals } from "https://deno.land/std@0.186.0/testing/asserts.ts";
-import { concat } from "https://deno.land/std@0.186.0/bytes/mod.ts";
+import { assertEquals } from "@std/assert";
+import { concat } from "@std/bytes";
 import { readableStreamFromWorker } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 
@@ -15,7 +15,7 @@ Deno.test(
     for await (const chunk of rstream) {
       chunks.push(chunk);
     }
-    const content = concat(...chunks);
+    const content = concat(chunks);
     assertEquals(content, new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
   },
 );
@@ -32,7 +32,7 @@ Deno.test(
     for await (const chunk of rstream) {
       chunks.push(chunk);
     }
-    const content = concat(...chunks);
+    const content = concat(chunks);
     assertEquals(content, new Uint8Array([0, 1, 2, 3, 4]));
   },
 );

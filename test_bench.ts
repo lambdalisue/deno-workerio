@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.186.0/testing/asserts.ts";
+import { assertEquals } from "@std/assert";
 import { readableStreamFromWorker, writableStreamFromWorker } from "./mod.ts";
 
 const count = 1000;
