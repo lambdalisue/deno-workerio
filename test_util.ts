@@ -7,7 +7,7 @@ export class MockWorker extends EventTarget {
   onmessage?: (this: Worker, ev: MessageEvent) => void;
   postMessage(data: unknown) {
     const ev = new MessageEvent("message", { data });
-    this.onmessage?.call(this, ev);
+    this.onmessage?.call(this as unknown as Worker, ev);
     this.dispatchEvent(ev);
   }
   terminate() {

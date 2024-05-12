@@ -6,7 +6,7 @@ import { MockWorker } from "./test_util.ts";
 Deno.test(
   "readableStreamFromWorker returns ReadableStream that yields data from worker",
   async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const rstream = readableStreamFromWorker(worker);
     worker.postMessage(new Uint8Array([0, 1, 2, 3, 4]));
     worker.postMessage(new Uint8Array([5, 6, 7, 8, 9]));
@@ -23,7 +23,7 @@ Deno.test(
 Deno.test(
   "readableStreamFromWorker returns ReadableStream that yields data from worker prior to close",
   async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const rstream = readableStreamFromWorker(worker);
     worker.postMessage(new Uint8Array([0, 1, 2, 3, 4]));
     worker.postMessage(null);
