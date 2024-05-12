@@ -1,7 +1,6 @@
 # workerio
 
-[![deno land](http://img.shields.io/badge/available%20on-deno.land/x-lightgrey.svg?logo=deno)](https://deno.land/x/workerio)
-[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/workerio/mod.ts)
+[![JSR](https://jsr.io/badges/@lambdalisue/workerio)](https://jsr.io/@lambdalisue/workerio)
 [![Test](https://github.com/lambdalisue/deno-workerio/actions/workflows/test.yml/badge.svg)](https://github.com/lambdalisue/deno-workerio/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/lambdalisue/deno-workerio/graph/badge.svg?token=6Q1iOBg2Ka)](https://codecov.io/gh/lambdalisue/deno-workerio)
 
@@ -21,7 +20,7 @@
 import {
   readableStreamFromWorker,
   writableStreamFromWorker,
-} from "https://deno.land/x/workerio@$MODULE_VERSION/mod.ts";
+} from "@lambdalisue/workerio";
 
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
@@ -50,7 +49,7 @@ for await (const data of reader) {
 import {
   readableStreamFromWorker,
   writableStreamFromWorker,
-} from "https://deno.land/x/workerio@$MODULE_VERSION/mod.ts";
+} from "@lambdalisue/workerio";
 
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();

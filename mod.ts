@@ -15,7 +15,7 @@
  * import {
  *   readableStreamFromWorker,
  *   writableStreamFromWorker,
- * } from "https://deno.land/x/workerio@$MODULE_VERSION/mod.ts";
+ * } from "@lambdalisue/workerio";
  *
  * const decoder = new TextDecoder();
  * const encoder = new TextEncoder();
@@ -44,7 +44,7 @@
  * import {
  *   readableStreamFromWorker,
  *   writableStreamFromWorker,
- * } from "https://deno.land/x/workerio@$MODULE_VERSION/mod.ts";
+ * } from "@lambdalisue/workerio";
  *
  * const decoder = new TextDecoder();
  * const encoder = new TextEncoder();
