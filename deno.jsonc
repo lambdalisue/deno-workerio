@@ -1,8 +1,11 @@
 {
   "tasks": {
-    "test": "deno test -A --parallel",
+    "check": "deno check **/*.ts",
+    "test": "deno test -A --doc --parallel --shuffle",
+    "test:coverage": "deno task test --coverage=.coverage",
+    "coverage": "deno coverage .coverage",
     "bench": "deno bench -A",
-    "check": "deno check $(find . -name '*.ts')",
-    "upgrade": "deno run -A https://deno.land/x/udd/main.ts $(find . -name '*.ts')"
+    "update": "deno run --allow-env --allow-read --allow-write=. --allow-run=git,deno --allow-net=jsr.io,registry.npmjs.org jsr:@molt/cli ./*.ts",
+    "update:commit": "deno task -q update --commit --pre-commit=fmt,lint"
   }
 }

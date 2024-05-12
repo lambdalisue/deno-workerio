@@ -1,3 +1,2 @@
-.tool-versions
-/.tools
 deno.lock
+.coverage
