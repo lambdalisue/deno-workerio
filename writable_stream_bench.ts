@@ -1,8 +1,5 @@
-import {
-  assertEquals,
-  assertInstanceOf,
-} from "https://deno.land/std@0.186.0/testing/asserts.ts";
-import { WorkerWriter, writableStreamFromWorker } from "./mod.ts";
+import { assertEquals, assertInstanceOf } from "@std/assert";
+import { writableStreamFromWorker } from "./mod.ts";
 import { MockWorker } from "./test_util.ts";
 
 const count = 100;
@@ -37,27 +34,6 @@ for (const size of sizes) {
         await writer.write(data);
       }
       writer.releaseLock();
-      assertEquals(total, size * count);
-    },
-  );
-
-  Deno.bench(
-    `WorkerWriter (${size.toString().padStart(2)} Bytes x ${count})`,
-    {
-      group: size.toString(),
-    },
-    async () => {
-      const worker = new MockWorker() as Worker;
-      let total = 0;
-      worker.addEventListener("message", (ev) => {
-        assertInstanceOf(ev, MessageEvent<Uint8Array>);
-        total += ev.data.length;
-      });
-      const writer = new WorkerWriter(worker);
-      for (let i = 0; i < count; i++) {
-        const data = new Uint8Array(size);
-        await writer.write(data);
-      }
       assertEquals(total, size * count);
     },
   );
