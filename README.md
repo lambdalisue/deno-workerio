@@ -25,7 +25,7 @@
 import {
   readableStreamFromWorker,
   writableStreamFromWorker,
-} from "https://deno.land/x/workerio/mod.ts";
+} from "https://deno.land/x/workerio@$MODULE_VERSION/mod.ts";
 
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
@@ -54,7 +54,7 @@ for await (const data of reader) {
 import {
   readableStreamFromWorker,
   writableStreamFromWorker,
-} from "https://deno.land/x/workerio/mod.ts";
+} from "https://deno.land/x/workerio@$MODULE_VERSION/mod.ts";
 
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
@@ -83,7 +83,7 @@ main().catch((e) => console.error(e));
 import {
   WorkerReader,
   WorkerWriter,
-} from "https://deno.land/x/workerio/mod.ts";
+} from "https://deno.land/x/workerio@$MODULE_VERSION/mod.ts";
 
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
@@ -110,7 +110,7 @@ for await (const data of Deno.iter(reader)) {
 import {
   WorkerReader,
   WorkerWriter,
-} from "https://deno.land/x/workerio/mod.ts";
+} from "https://deno.land/x/workerio@$MODULE_VERSION/mod.ts";
 
 const decoder = new TextDecoder();
 const encoder = new TextEncoder();
