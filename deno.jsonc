@@ -7,7 +7,6 @@
     "./writable_stream": "./writable_stream.ts"
   },
   "publish": {
-    "include": ["LICENSE", "README.md", "**/*.ts"],
     "exclude": [
       "./readable_stream_bench.ts",
       "./readable_stream_test.ts",
