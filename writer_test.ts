@@ -9,7 +9,7 @@ import { MockWorker } from "./test_util.ts";
 Deno.test(
   "WorkerWriter invokes internal worker.postMessage when data is written by 'write' method",
   async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const chunks: Uint8Array[] = [];
     worker.addEventListener("message", (ev) => {
       assertInstanceOf(ev, MessageEvent<Uint8Array>);
@@ -26,7 +26,7 @@ Deno.test(
 Deno.test(
   "WorkerWriter send 'null' when 'close' method is called",
   () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const chunks: null[] = [];
     worker.addEventListener("message", (ev) => {
       assertInstanceOf(ev, MessageEvent<null>);

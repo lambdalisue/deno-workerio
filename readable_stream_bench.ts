@@ -21,7 +21,7 @@ for (const size of sizes) {
       baseline: true,
     },
     async () => {
-      const worker = new MockWorker();
+      const worker = new MockWorker() as Worker;
       const rstream = readableStreamFromWorker(worker);
       for (let i = 0; i < count; i++) {
         const data = new Uint8Array(size);
@@ -42,7 +42,7 @@ for (const size of sizes) {
       group: size.toString(),
     },
     async () => {
-      const worker = new MockWorker();
+      const worker = new MockWorker() as Worker;
       const reader = new WorkerReader(worker);
       for (let i = 0; i < count; i++) {
         const data = new Uint8Array(size);

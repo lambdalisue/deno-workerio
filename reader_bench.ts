@@ -18,7 +18,7 @@ for (const size of sizes) {
     group: size.toString(),
     baseline: true,
   }, async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const reader = new WorkerReader(worker);
     for (let i = 0; i < count; i++) {
       const data = new Uint8Array(size);
@@ -41,7 +41,7 @@ for (const size of sizes) {
       group: size.toString(),
     },
     async () => {
-      const worker = new MockWorker();
+      const worker = new MockWorker() as Worker;
       const reader = new WorkerReaderV2(worker);
       for (let i = 0; i < count; i++) {
         const data = new Uint8Array(size);
@@ -65,7 +65,7 @@ for (const size of sizes) {
       group: size.toString(),
     },
     async () => {
-      const worker = new MockWorker();
+      const worker = new MockWorker() as Worker;
       const reader = new WorkerReaderV1(worker);
       for (let i = 0; i < count; i++) {
         const data = new Uint8Array(size);

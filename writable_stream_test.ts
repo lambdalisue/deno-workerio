@@ -9,7 +9,7 @@ import { MockWorker } from "./test_util.ts";
 Deno.test(
   "writableStreamFromWorker returns WritableStream that writes data to worker",
   async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const chunks: Uint8Array[] = [];
     worker.addEventListener("message", (ev) => {
       assertInstanceOf(ev, MessageEvent<Uint8Array>);

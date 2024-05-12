@@ -24,7 +24,7 @@ for (const size of sizes) {
       baseline: true,
     },
     async () => {
-      const worker = new MockWorker();
+      const worker = new MockWorker() as Worker;
       let total = 0;
       worker.addEventListener("message", (ev) => {
         assertInstanceOf(ev, MessageEvent<Uint8Array>);
@@ -45,7 +45,7 @@ for (const size of sizes) {
       group: size.toString(),
     },
     async () => {
-      const worker = new MockWorker();
+      const worker = new MockWorker() as Worker;
       let total = 0;
       worker.addEventListener("message", (ev) => {
         assertInstanceOf(ev, MessageEvent<Uint8Array>);
@@ -66,7 +66,7 @@ for (const size of sizes) {
       group: size.toString(),
     },
     async () => {
-      const worker = new MockWorker();
+      const worker = new MockWorker() as Worker;
       let total = 0;
       worker.addEventListener("message", (ev) => {
         assertInstanceOf(ev, MessageEvent<Uint8Array>);

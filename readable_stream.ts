@@ -27,7 +27,7 @@ export function readableStreamFromWorker(
       worker.onmessage = (ev) => {
         if (ev.data === null) {
           controller.close();
-          worker.onmessage = undefined;
+          worker.onmessage = () => undefined;
         } else if (ev.data instanceof Uint8Array) {
           controller.enqueue(ev.data);
         } else {
@@ -36,7 +36,7 @@ export function readableStreamFromWorker(
       };
     },
     cancel() {
-      worker.onmessage = undefined;
+      worker.onmessage = () => undefined;
     },
   }, strategy);
 }

@@ -7,7 +7,7 @@ import { MockWorker } from "./test_util.ts";
 Deno.test({
   name: "WorkerReader reads data forever until closed",
   fn: async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const reader = new WorkerReader(worker);
     worker.postMessage(new Uint8Array([0, 1, 2, 3, 4]));
     worker.postMessage(new Uint8Array([5, 6, 7, 8, 9]));
@@ -23,7 +23,7 @@ Deno.test({
 Deno.test(
   "WorkerReader reads data posted to the worker",
   async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const reader = new WorkerReader(worker);
     worker.postMessage(new Uint8Array([0, 1, 2, 3, 4]));
     worker.postMessage(new Uint8Array([5, 6, 7, 8, 9]));
@@ -37,7 +37,7 @@ Deno.test(
 Deno.test(
   "WorkerReader reads data posted to the worker prior to close",
   async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const reader = new WorkerReader(worker);
     worker.postMessage(new Uint8Array([0, 1, 2, 3, 4]));
     reader.close();
@@ -51,7 +51,7 @@ Deno.test(
 Deno.test(
   "WorkerReader reads data posted to the worker (closed with null)",
   async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const reader = new WorkerReader(worker);
     worker.postMessage(new Uint8Array([0, 1, 2, 3, 4]));
     worker.postMessage(new Uint8Array([5, 6, 7, 8, 9]));
@@ -65,7 +65,7 @@ Deno.test(
 Deno.test(
   "WorkerReader reads data posted to the worker prior to close (closed with null)",
   async () => {
-    const worker = new MockWorker();
+    const worker = new MockWorker() as Worker;
     const reader = new WorkerReader(worker);
     worker.postMessage(new Uint8Array([0, 1, 2, 3, 4]));
     worker.postMessage(null);
