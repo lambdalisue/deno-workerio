@@ -1,3 +1,5 @@
+import type { WorkerLike } from "./types.ts";
+
 /**
  * Options for creating a readable stream from a worker.
  */
@@ -16,7 +18,7 @@ export type ReadableStreamFromWorkerOptions = {
  * @returns A readable stream that can be used to read the data.
  */
 export function readableStreamFromWorker(
-  worker: Worker,
+  worker: WorkerLike,
   options: ReadableStreamFromWorkerOptions = {},
 ): ReadableStream<Uint8Array> {
   const {

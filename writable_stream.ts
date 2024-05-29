@@ -1,3 +1,5 @@
+import type { WorkerLike } from "./types.ts";
+
 /**
  * Options for creating a writable stream from a worker.
  */
@@ -15,7 +17,7 @@ export type WritableStreamFromWorkerOptions = {
  * @returns A new `WritableStream` instance.
  */
 export function writableStreamFromWorker(
-  worker: Worker,
+  worker: WorkerLike,
   options: WritableStreamFromWorkerOptions = {},
 ): WritableStream<Uint8Array> {
   const {

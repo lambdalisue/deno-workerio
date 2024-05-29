@@ -4,7 +4,8 @@
   "exports": {
     ".": "./mod.ts",
     "./readable_stream": "./readable_stream.ts",
-    "./writable_stream": "./writable_stream.ts"
+    "./writable_stream": "./writable_stream.ts",
+    "./types": "./types.ts"
   },
   "publish": {
     "exclude": [
