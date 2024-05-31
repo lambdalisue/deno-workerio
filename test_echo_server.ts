@@ -1,4 +1,6 @@
-const worker = self as unknown as Worker;
-worker.onmessage = (ev) => {
-  worker.postMessage(ev.data);
+/// <reference no-default-lib="true" />
+/// <reference lib="deno.worker" />
+
+self.onmessage = (ev) => {
+  self.postMessage(ev.data);
 };

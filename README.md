@@ -46,6 +46,9 @@ for await (const data of reader) {
 #### Worker
 
 ```typescript
+/// <reference no-default-lib="true" />
+/// <reference lib="deno.worker" />
+
 import {
   readableStreamFromWorker,
   writableStreamFromWorker,
@@ -55,9 +58,8 @@ const decoder = new TextDecoder();
 const encoder = new TextEncoder();
 
 async function main(): Promise<void> {
-  const worker = self as unknown as Worker;
-  const reader = readableStreamFromWorker(worker);
-  const writer = writableStreamFromWorker(worker);
+  const reader = readableStreamFromWorker(self);
+  const writer = writableStreamFromWorker(self);
   const w = writer.getWriter();
 
   for await (const data of reader) {
